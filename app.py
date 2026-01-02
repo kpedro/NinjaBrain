@@ -1,27 +1,29 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Configuração inicial
-st.set_page_config(page_title="NinjaBrain OS", layout="wide")
+# 1. Configuração de Layout
+st.set_page_config(page_title="NinjaBrain OS", layout="wide", initial_sidebar_state="expanded")
 
-# 2. Conexão com a API (Pega a chave dos Secrets)
+# 2. Conexão com a API
 if "GEMINI_API_KEY" not in st.secrets:
-    st.error("ERRO: Chave GEMINI_API_KEY não encontrada nos Secrets.")
+    st.error("Configure a GEMINI_API_KEY nos Secrets do Streamlit.")
     st.stop()
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
+
+# 3. Inicialização do Modelo (O mais estável de todos)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# 3. Barra Lateral (Onde estarão os botões)
+# 4. Barra Lateral com Ferramentas
 with st.sidebar:
-    st.title("🥷 Ferramentas")
-    st.success("Modo: Mentor de Vida")
+    st.title("🧰 Ferramentas Ninja")
+    st.info("🎯 Modo: Mentor de Vida")
     st.divider()
-    arquivo = st.file_uploader("Subir Arquivo", type=['pdf', 'png', 'jpg'])
+    arquivo = st.file_uploader("Subir PDF ou Imagem", type=['pdf', 'png', 'jpg'])
     st.divider()
     st.subheader("📥 Exportar")
 
-# 4. Chat Principal
+# 5. Interface de Chat
 st.title("🚀 NinjaBrain OS")
 
 if "messages" not in st.session_state:
@@ -38,15 +40,20 @@ if prompt := st.chat_input("Diga algo para testar..."):
 
     with st.chat_message("assistant"):
         try:
-            # Teste de resposta simples
-            res = model.generate_content(prompt)
+            # Chamada simplificada para evitar erro v1beta
+            if arquivo:
+                res = model.generate_content([prompt, arquivo])
+            else:
+                res = model.generate_content(prompt)
+            
             resposta = res.text
             st.markdown(resposta)
             st.session_state.messages.append({"role": "assistant", "content": resposta})
             
-            # ATIVA OS BOTÕES DE EXPORTAR
+            # BOTÕES DE EXPORTAÇÃO NA SIDEBAR
             with st.sidebar:
                 st.download_button("📥 Baixar TXT", resposta, file_name="ninja.txt")
                 st.download_button("📄 Salvar Word", resposta, file_name="ninja.doc")
+                
         except Exception as e:
             st.error(f"Erro: {e}")
