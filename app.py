@@ -1,25 +1,36 @@
 import streamlit as st
 import google.generativeai as genai
-from io import BytesIO
 
-# Configuração da página
-st.set_page_config(page_title="NinjaBrain Multimodal", layout="wide")
-st.title("🥷 NinjaBrain: Segundo Cérebro Pro")
+# 1. Configuração e Estilo
+st.set_page_config(page_title="NinjaBrain Pro", layout="wide")
 
-# Conexão segura
+# Conexão com a chave nos Secrets
 api_key = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=api_key)
 model = genai.GenerativeModel("gemini-1.5-flash")
 
-# --- BARRA LATERAL (Uploads e Exportação) ---
+# 2. BARRA LATERAL (Abas de Funções)
 with st.sidebar:
-    st.header("📁 Central de Arquivos")
-    uploaded_file = st.file_uploader("Subir Áudio, Imagem ou PDF", type=['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'wav'])
+    st.title("🧰 Ferramentas Ninja")
     
-    if uploaded_file:
-        st.success(f"Arquivo {uploaded_file.name} carregado!")
+    tab_upload, tab_export = st.tabs(["📁 Upload", "📤 Exportar"])
+    
+    with tab_upload:
+        st.subheader("Analisar Arquivo")
+        arquivo = st.file_uploader(
+            "Subir Áudio, Imagem ou PDF", 
+            type=['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'wav']
+        )
+        if arquivo:
+            st.info(f"Arquivo '{arquivo.name}' pronto para análise.")
 
-# --- ÁREA DE CHAT ---
+    with tab_export:
+        st.subheader("Salvar Conversa")
+        # Aqui ficarão os botões de download após gerar a resposta
+
+# 3. INTERFACE DE CHAT
+st.title("🥷 NinjaBrain: Segundo Cérebro")
+
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
@@ -27,27 +38,24 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-if prompt := st.chat_input("Ninja, analise este arquivo para mim..."):
+# 4. LÓGICA DE PROCESSAMENTO
+if prompt := st.chat_input("O que vamos evoluir hoje, Kadson?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        # Lógica para processar arquivos + texto
-        if uploaded_file:
-            content = [prompt, uploaded_file]
-            response = model.generate_content(content)
+        # Se tiver arquivo, o Ninja lê o arquivo + o texto
+        if arquivo:
+            res = model.generate_content([prompt, arquivo])
         else:
-            response = model.generate_content(prompt)
+            res = model.generate_content(prompt)
         
-        full_response = response.text
-        st.markdown(full_response)
-        st.session_state.messages.append({"role": "assistant", "content": full_response})
+        texto_resposta = res.text
+        st.markdown(texto_resposta)
+        st.session_state.messages.append({"role": "assistant", "content": texto_resposta})
 
-        # --- BOTÕES DE EXPORTAÇÃO ---
-        col1, col2 = st.columns(2)
-        with col1:
-            st.download_button("📥 Baixar TXT", full_response, file_name="resposta_ninja.txt")
-        with col2:
-            # Simulação simples de Word via texto puro
-            st.download_button("📄 Exportar Word (Doc)", full_response, file_name="resposta_ninja.doc")
+        # Adiciona botões de exportação dinâmicos na aba de exportar
+        with tab_export:
+            st.download_button("📥 Baixar TXT", texto_resposta, file_name="ninja_brain.txt")
+            st.download_button("📄 Baixar Word (Doc)", texto_resposta, file_name="ninja_brain.doc")
