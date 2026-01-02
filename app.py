@@ -1,96 +1,68 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Configuração de Alta Performance e Layout
+# 1. Configuração de Layout
 st.set_page_config(
     page_title="NinjaBrain OS", 
     layout="wide", 
     initial_sidebar_state="expanded"
 )
 
-# 2. Conexão com a API através dos Secrets do Streamlit
+# 2. Conexão com a API
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
 except Exception as e:
-    st.error("Erro ao carregar a chave API. Verifique os Secrets no Streamlit Cloud.")
+    st.error("Erro ao carregar a chave API nos Secrets.")
 
-# 3. Definição da Personalidade Híbrida
+# 3. Personalidade Híbrida
 system_prompt = (
-    "Você é o NinjaBrain OS, uma inteligência híbrida de alto nível. "
-    "Sua missão é atuar em dois modos dependendo da necessidade do Kadson: "
-    "MODO MENTOR: Ajuda em vida, finanças, estudos (CNU) e produtividade. "
-    "MODO PRD ARCHITECT: Atua como um engenheiro de software sênior. Transforma ideias em "
-    "Documentos de Requisitos (PRD) técnicos. Quando solicitado um app, você deve entregar: "
-    "1. Objetivo; 2. Funcionalidades; 3. Tech Stack; 4. O Código pronto para o Cursor Free."
+    "Você é o NinjaBrain OS. "
+    "MODO MENTOR: Ajuda em vida, finanças e produtividade. "
+    "MODO PRD ARCHITECT: Transforma ideias em Documentos de Requisitos (PRD) técnicos "
+    "e gera o código inicial pronto para o Cursor Free."
 )
 
-# 4. Inicialização do Modelo (Usando a versão mais estável para evitar erros)
+# 4. Inicialização do Modelo (Alterado para gemini-pro para maior compatibilidade)
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
+    model_name="gemini-pro",
     system_instruction=system_prompt
 )
 
-# 5. Barra Lateral de Ferramentas
+# 5. Barra Lateral
 with st.sidebar:
     st.title("🥷 Ferramentas")
-    modo = st.radio(
-        "Escolha o Foco:", 
-        ["🧠 Mentor de Vida", "🛠️ Arquiteto de PRD (Apps)"]
-    )
+    modo = st.radio("Foco:", ["🧠 Mentor de Vida", "🛠️ Arquiteto de PRD"])
     st.divider()
-    upload = st.file_uploader(
-        "Subir arquivo (PDF, Imagem, Áudio)", 
-        type=['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'wav']
-    )
-    if upload:
-        st.success(f"Arquivo '{upload.name}' carregado!")
+    upload = st.file_uploader("Subir arquivo", type=['pdf', 'png', 'jpg', 'mp3'])
 
-# 6. Interface Principal de Chat
+# 6. Chat Interface
 st.title(f"🚀 NinjaBrain: {modo}")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Exibição do Histórico
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 7. Lógica de Resposta e Processamento
-if prompt := st.chat_input("O que vamos construir ou resolver hoje, Kadson?"):
-    # Salva a pergunta do usuário
+if prompt := st.chat_input("Como vamos evoluir hoje?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
         try:
-            # Ajusta o prompt se estiver no modo PRD
-            input_prompt = prompt
-            if modo == "🛠️ Arquiteto de PRD (Apps)":
-                input_prompt = f"Gere um PRD completo e o código inicial para esta ideia: {prompt}"
+            input_text = prompt
+            if modo == "🛠️ Arquiteto de PRD":
+                input_text = f"Gere um PRD e o código para: {prompt}"
             
-            # Processamento Multimodal (Texto + Arquivo se houver)
-            if upload:
-                response = model.generate_content([input_prompt, upload])
-            else:
-                response = model.generate_content(input_prompt)
-                
-            resposta_texto = response.text
-            st.markdown(resposta_texto)
+            # Nota: O modelo 'gemini-pro' padrão pode ter limitações com arquivos diretamente no prompt
+            # Se precisar de multimodal, o ideal é o 1.5-flash ou 1.5-pro assim que liberados na sua conta
+            response = model.generate_content(input_text)
             
-            # Salva a resposta do Ninja no histórico
-            st.session_state.messages.append({"role": "assistant", "content": resposta_texto})
-            
-            # Botão de Exportação na barra lateral
-            with st.sidebar:
-                st.download_button(
-                    label="📥 Baixar Resposta (TXT)",
-                    data=resposta_texto,
-                    file_name="ninja_output.txt",
-                    mime="text/plain"
-                )
+            st.markdown(response.text)
+            st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
-            st.error(f"Ocorreu um erro na geração: {e}")
-            st.info("Dica: Verifique se sua chave API está ativa e se o modelo 'gemini-1.5-flash' está disponível.")
+            st.error(f"Erro na geração: {e}")
+            st.info("Tente simplificar o pedido ou verifique se o modelo está ativo na sua região.")
