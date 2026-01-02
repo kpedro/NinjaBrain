@@ -1,16 +1,17 @@
 import streamlit as st
 import google.generativeai as genai
-import os
 
-# Configuração da página para ficar com cara de Dashboard
-st.set_page_config(page_title="NinjaBrain: Life & AI Mentor", layout="centered")
+# 1. Configuração Visual
+st.set_page_config(page_title="NinjaBrain: Seu Mentor 360º", layout="centered")
+st.title("🥷 NinjaBrain: Seu Mentor 360º")
+st.caption("Especialista em Vida, IA, Finanças e Concursos")
 
-# Puxa a chave que você salvou no Streamlit Cloud
+# 2. Conexão com a Chave Secreta
+# O Streamlit busca a chave que você salvou no menu 'Secrets'
 api_key = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=api_key)
 
-# AQUI ESTÁ O "CÉREBRO" QUE VOCÊ NÃO ACHAVA:
-# Definimos a nova personalidade do Ninja
+# 3. A NOVA PERSONALIDADE (Onde o Ninja evolui)
 system_prompt = (
     "Você é o NinjaBrain, o Mentor Pessoal do Kadson. "
     "Sua missão é ajudá-lo em TODAS as áreas da vida: "
@@ -18,36 +19,37 @@ system_prompt = (
     "2. Carreira e Riqueza: Dê conselhos estratégicos e planos de ação. "
     "3. Concursos (CNU): Continue sendo o mestre nos estudos. "
     "4. Estilo de Vida: Ajude na organização e produtividade diária. "
-    "Use linguagem ninja: direta, motivadora e estruturada em tópicos."
+    "Responda sempre de forma direta, motivadora e organizada."
 )
 
-# Inicializa o modelo com as novas instruções
+# 4. Inicialização do Modelo
 model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash", # Ou o 2.5/3 que você preferir
+    model_name="gemini-1.5-flash",
     system_instruction=system_prompt
 )
 
-st.title("🥷 NinjaBrain: Seu Mentor 360º")
-st.caption("Especialista em Vida, IA e Concursos")
-
-# Histórico de Chat
+# 5. Memória da Conversa
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
+# Exibe as mensagens anteriores
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# Campo de Chat
+# 6. O TRECHO PRINCIPAL (Interação)
 if prompt := st.chat_input("Em que vamos evoluir hoje, Kadson?"):
+    # Adiciona a pergunta do usuário no histórico
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Resposta do Ninja
+    # Gera a resposta do Mentor
     with st.chat_message("assistant"):
-        # Envia o histórico para ele ter memória
+        # Cria o chat com o histórico atual
         chat = model.start_chat(history=[])
         response = chat.send_message(prompt)
+        
         st.markdown(response.text)
+        # Salva a resposta do Ninja no histórico
         st.session_state.messages.append({"role": "assistant", "content": response.text})
