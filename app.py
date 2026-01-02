@@ -2,33 +2,32 @@ import streamlit as st
 import google.generativeai as genai
 
 # 1. Configuração de Layout
-st.set_page_config(page_title="NinjaBrain OS", layout="wide")
+st.set_page_config(page_title="NinjaBrain OS", layout="wide", initial_sidebar_state="expanded")
 
-# 2. Conexão com a API (Sem firulas)
+# 2. Conexão com a API (Secrets)
 if "GEMINI_API_KEY" not in st.secrets:
     st.error("Configure a GEMINI_API_KEY nos Secrets do Streamlit.")
     st.stop()
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-# 3. Inicialização do Modelo (Padrão de Fábrica)
-# Removendo system_instruction para evitar o erro 404 de versão
+# 3. Inicialização do Modelo (Usando o 1.5 Flash - o mais rápido do mundo)
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# 4. Barra Lateral com Ferramentas
+# 4. BARRA LATERAL (Ferramentas e Botões)
 with st.sidebar:
-    st.title("🥷 Ferramentas")
-    st.info("Modo: Mentor de Vida Ativado")
+    st.title("🧰 Ferramentas Ninja")
+    st.info("🎯 Modo: Mentor de Vida Ativado")
     
     st.divider()
-    st.subheader("📁 Arquivos")
-    arquivo = st.file_uploader("Analisar PDF ou Imagem", type=['pdf', 'png', 'jpg', 'jpeg'])
+    st.subheader("📁 Analisar Arquivos")
+    arquivo = st.file_uploader("Subir PDF ou Imagem", type=['pdf', 'png', 'jpg', 'jpeg'])
     
     st.divider()
-    st.subheader("📤 Exportar")
-    # Os botões aparecerão aqui após a resposta
+    st.subheader("📤 Exportar e Salvar")
+    # Os botões aparecerão aqui após o Ninja responder
 
-# 5. Interface de Chat
+# 5. INTERFACE DE CHAT
 st.title("🚀 NinjaBrain: Mentor de Vida")
 
 if "messages" not in st.session_state:
@@ -45,21 +44,25 @@ if prompt := st.chat_input("Como posso te ajudar hoje, Kadson?"):
 
     with st.chat_message("assistant"):
         try:
-            # Envio simples para garantir conexão
+            # Comando de sistema direto no prompt para evitar erro de configuração
+            instrucao = "Você é o NinjaBrain, um mentor de vida focado em produtividade e finanças. "
+            prompt_completo = f"{instrucao} Pergunta: {prompt}"
+            
             if arquivo:
-                res = model.generate_content([prompt, arquivo])
+                res = model.generate_content([prompt_completo, arquivo])
             else:
-                res = model.generate_content(prompt)
+                res = model.generate_content(prompt_completo)
             
-            resposta_texto = res.text
-            st.markdown(resposta_texto)
-            st.session_state.messages.append({"role": "assistant", "content": resposta_texto})
+            texto_final = res.text
+            st.markdown(texto_final)
+            st.session_state.messages.append({"role": "assistant", "content": texto_final})
             
-            # --- BOTÕES DE EXPORTAÇÃO ---
+            # --- RECOLOCANDO OS BOTÕES DE EXPORTAÇÃO ---
             with st.sidebar:
-                st.download_button("📥 Baixar em TXT", resposta_texto, file_name="mentoria_ninja.txt")
-                st.download_button("📄 Salvar para Word", resposta_texto, file_name="mentoria_ninja.doc")
+                st.download_button("📥 Baixar em TXT", texto_final, file_name="ninja_brain.txt")
+                st.download_button("📄 Salvar para Word (Doc)", texto_final, file_name="ninja_brain.doc")
+                st.success("Pronto! Escolha como salvar acima.")
                 
         except Exception as e:
-            st.error(f"Erro ao conectar com o cérebro da IA: {e}")
-            st.info("Dica: Se o erro persistir, gere uma nova chave no Google AI Studio e dê REBOOT no app.")
+            st.error(f"Erro técnico: {e}")
+            st.warning("Dica: Se o erro 404 persistir, o problema está na CHAVE de API. Gere uma nova no Google AI Studio.")
