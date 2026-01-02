@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>🥷 NinjaBrain - CNU 2026 | Bloco 8</title>
+    <link rel="stylesheet" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🥷 NinjaBrain</h1>
+            <p class="subtitle">Segundo Cérebro de IA | CNU 2026 - Bloco 8</p>
+        </header>
+
+        <nav class="tabs">
+            <button class="tab active" data-tab="plano">📋 Plano de Ataque</button>
+            <button class="tab" data-tab="disciplinas">📚 Disciplinas</button>
+            <button class="tab" data-tab="cronograma">📅 Cronograma</button>
+        </nav>
+
+        <main class="content">
+            <div id="plano" class="tab-content active">
+                <div id="markdown-content"></div>
+            </div>
+            
+            <div id="disciplinas" class="tab-content">
+                <div class="disciplinas-grid">
+                    <div class="disciplina-card priority-high">
+                        <h3>🇧🇷 Língua Portuguesa</h3>
+                        <p class="weight">35% das questões</p>
+                        <ul>
+                            <li>✅ Interpretação de textos</li>
+                            <li>✅ Coesão e coerência</li>
+                            <li>✅ Classes de palavras</li>
+                        </ul>
+                    </div>
+
+                    <div class="disciplina-card priority-high">
+                        <h3>🔢 Matemática</h3>
+                        <p class="weight">Alta frequência</p>
+                        <ul>
+                            <li>✅ Razão e proporção</li>
+                            <li>✅ Funções</li>
+                            <li>✅ Probabilidade</li>
+                        </ul>
+                    </div>
+
+                    <div class="disciplina-card priority-medium">
+                        <h3>⚖️ Noções de Direito</h3>
+                        <p class="weight">Base conceitual</p>
+                        <ul>
+                            <li>✅ CF artigos 1-41</li>
+                            <li>✅ Organização do Estado</li>
+                            <li>✅ Direito Administrativo</li>
+                        </ul>
+                    </div>
+
+                    <div class="disciplina-card priority-medium">
+                        <h3>🌎 Realidade Brasileira</h3>
+                        <p class="weight">Atualidades</p>
+                        <ul>
+                            <li>✅ História: Independência → República</li>
+                            <li>✅ Biomas brasileiros</li>
+                            <li>✅ Sustentabilidade</li>
+                        </ul>
+                    </div>
+
+                    <div class="disciplina-card priority-specific">
+                        <h3>🏥 Saúde</h3>
+                        <p class="weight">Específico do Bloco 8</p>
+                        <ul>
+                            <li>✅ SUS (Lei 8.080)</li>
+                            <li>✅ NR 32</li>
+                            <li>✅ Vigilância em saúde</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div id="cronograma" class="tab-content">
+                <div class="timeline">
+                    <div class="timeline-item">
+                        <div class="timeline-marker">1-2</div>
+                        <div class="timeline-content">
+                            <h3>FUNDAÇÃO (20% que gera 80%)</h3>
+                            <ul>
+                                <li>Português: Interpretação de textos</li>
+                                <li>Matemática: Razão/proporção + Funções</li>
+                                <li>Direito: CF artigos 1-41</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">3-4</div>
+                        <div class="timeline-content">
+                            <h3>EXPANSÃO</h3>
+                            <ul>
+                                <li>Português: Coesão/coerência + Classes</li>
+                                <li>Matemática: Probabilidade + Estatística</li>
+                                <li>Realidade BR: História + Biomas</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">5-6</div>
+                        <div class="timeline-content">
+                            <h3>ESPECIALIZAÇÃO</h3>
+                            <ul>
+                                <li>Direito: Organização do Estado + Admin</li>
+                                <li>Saúde: SUS (Lei 8.080) + NR 32</li>
+                                <li>Realidade BR: Sustentabilidade + Energia</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-item">
+                        <div class="timeline-marker">7+</div>
+                        <div class="timeline-content">
+                            <h3>REVISÃO E DISCURSIVA</h3>
+                            <ul>
+                                <li>Revisão dos 20% prioritários</li>
+                                <li>Treino de discursiva</li>
+                                <li>Simulados</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>💡 <strong>Dica de Ouro:</strong> 20% do conteúdo = 80% das questões. Foque no essencial!</p>
+        </footer>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
+
