@@ -1,42 +1,31 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Configuração de Layout
-st.set_page_config(
-    page_title="NinjaBrain OS", 
-    layout="wide", 
-    initial_sidebar_state="expanded"
-)
+# 1. Configuração Básica
+st.set_page_config(page_title="NinjaBrain OS", layout="wide")
 
-# 2. Conexão com a API
+# 2. Conexão Segura
 try:
     api_key = st.secrets["GEMINI_API_KEY"]
     genai.configure(api_key=api_key)
 except Exception as e:
-    st.error("Erro ao carregar a chave API nos Secrets.")
+    st.error("Erro nos Secrets: Verifique se GEMINI_API_KEY está configurada.")
 
-# 3. Personalidade Híbrida
-system_prompt = (
-    "Você é o NinjaBrain OS. "
-    "MODO MENTOR: Ajuda em vida, finanças e produtividade. "
-    "MODO PRD ARCHITECT: Transforma ideias em Documentos de Requisitos (PRD) técnicos "
-    "e gera o código inicial pronto para o Cursor Free."
-)
+# 3. Inicialização do Modelo (Usando a versão 1.0 para compatibilidade total)
+try:
+    # Mudança estratégica para a versão 1.0 pro
+    model = genai.GenerativeModel(model_name="gemini-1.0-pro")
+except Exception as e:
+    st.error(f"Erro ao carregar o modelo: {e}")
 
-# 4. Inicialização do Modelo (Alterado para gemini-pro para maior compatibilidade)
-model = genai.GenerativeModel(
-    model_name="gemini-pro",
-    system_instruction=system_prompt
-)
-
-# 5. Barra Lateral
+# 4. Barra Lateral
 with st.sidebar:
     st.title("🥷 Ferramentas")
     modo = st.radio("Foco:", ["🧠 Mentor de Vida", "🛠️ Arquiteto de PRD"])
     st.divider()
-    upload = st.file_uploader("Subir arquivo", type=['pdf', 'png', 'jpg', 'mp3'])
+    st.info("O modo Multimodal (arquivos) requer modelos 1.5. No momento, use apenas texto para estabilidade.")
 
-# 6. Chat Interface
+# 5. Chat Interface
 st.title(f"🚀 NinjaBrain: {modo}")
 
 if "messages" not in st.session_state:
@@ -53,16 +42,17 @@ if prompt := st.chat_input("Como vamos evoluir hoje?"):
 
     with st.chat_message("assistant"):
         try:
-            input_text = prompt
+            # Construindo o contexto manualmente para o modelo 1.0
+            contexto = "Você é o NinjaBrain OS. "
             if modo == "🛠️ Arquiteto de PRD":
-                input_text = f"Gere um PRD e o código para: {prompt}"
-            
-            # Nota: O modelo 'gemini-pro' padrão pode ter limitações com arquivos diretamente no prompt
-            # Se precisar de multimodal, o ideal é o 1.5-flash ou 1.5-pro assim que liberados na sua conta
-            response = model.generate_content(input_text)
+                prompt_final = f"{contexto} Atue como Arquiteto de PRD. Gere o plano e código para: {prompt}"
+            else:
+                prompt_final = f"{contexto} Atue como Mentor de Vida e Carreira. Ajude com: {prompt}"
+
+            response = model.generate_content(prompt_final)
             
             st.markdown(response.text)
             st.session_state.messages.append({"role": "assistant", "content": response.text})
         except Exception as e:
-            st.error(f"Erro na geração: {e}")
-            st.info("Tente simplificar o pedido ou verifique se o modelo está ativo na sua região.")
+            st.error(f"Erro técnico: {e}")
+            st.warning("Dica: Se o erro for 404, sua chave pode precisar ser gerada novamente no Google AI Studio.")
