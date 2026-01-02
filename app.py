@@ -1,80 +1,65 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Configuração de Layout e Tema
-st.set_page_config(page_title="NinjaBrain OS", layout="wide", initial_sidebar_state="expanded")
+# 1. Configuração de Layout
+st.set_page_config(page_title="NinjaBrain OS", layout="wide")
 
-# Estilo para botões e interface
-st.markdown("""
-<style>
-    .stDownloadButton, .stButton { width: 100%; }
-</style>
-""", unsafe_allow_html=True)
-
-# 2. Conexão Segura com a API
+# 2. Conexão com a API (Sem firulas)
 if "GEMINI_API_KEY" not in st.secrets:
-    st.error("Erro: Configure a GEMINI_API_KEY nos Secrets do Streamlit Cloud.")
+    st.error("Configure a GEMINI_API_KEY nos Secrets do Streamlit.")
     st.stop()
 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"])
 
-# 3. Personalidade e Modelo
-# Usando gemini-1.5-flash sem prefixos beta para estabilidade
+# 3. Inicialização do Modelo (Padrão de Fábrica)
+# Removendo system_instruction para evitar o erro 404 de versão
 model = genai.GenerativeModel('gemini-1.5-flash')
 
-# 4. BARRA LATERAL (Ferramentas e Exportação)
+# 4. Barra Lateral com Ferramentas
 with st.sidebar:
-    st.title("🧰 Ferramentas")
-    modo = st.radio("Escolha o Foco:", ["🧠 Mentor de Vida", "🛠️ Arquiteto de PRD"])
+    st.title("🥷 Ferramentas")
+    st.info("Modo: Mentor de Vida Ativado")
     
     st.divider()
-    st.subheader("📁 Central de Arquivos")
-    arquivo = st.file_uploader("Subir PDF, Imagem ou Áudio", type=['pdf', 'png', 'jpg', 'mp3', 'wav'])
+    st.subheader("📁 Arquivos")
+    arquivo = st.file_uploader("Analisar PDF ou Imagem", type=['pdf', 'png', 'jpg', 'jpeg'])
     
     st.divider()
-    st.subheader("📤 Exportar Resposta")
-    # Espaço reservado para os botões que aparecerão após a resposta
+    st.subheader("📤 Exportar")
+    # Os botões aparecerão aqui após a resposta
 
-# 5. INTERFACE DE CHAT
-st.title(f"🚀 NinjaBrain: {modo}")
+# 5. Interface de Chat
+st.title("🚀 NinjaBrain: Mentor de Vida")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Exibe mensagens anteriores
 for m in st.session_state.messages:
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
 
-# Entrada de texto
-if prompt := st.chat_input("Em que vamos evoluir hoje, Kadson?"):
+if prompt := st.chat_input("Como posso te ajudar hoje, Kadson?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
         try:
-            # Ajuste de instrução conforme o modo
-            contexto = "Atue como Mentor de Vida." if modo == "🧠 Mentor de Vida" else "Atue como Arquiteto de PRD Profissional."
-            prompt_final = f"{contexto} {prompt}"
-            
-            # Chamada multimodal ou simples
+            # Envio simples para garantir conexão
             if arquivo:
-                res = model.generate_content([prompt_final, arquivo])
+                res = model.generate_content([prompt, arquivo])
             else:
-                res = model.generate_content(prompt_final)
+                res = model.generate_content(prompt)
             
-            texto_final = res.text
-            st.markdown(texto_final)
-            st.session_state.messages.append({"role": "assistant", "content": texto_final})
+            resposta_texto = res.text
+            st.markdown(resposta_texto)
+            st.session_state.messages.append({"role": "assistant", "content": resposta_texto})
             
-            # --- ATUALIZAÇÃO DOS BOTÕES NA BARRA LATERAL ---
+            # --- BOTÕES DE EXPORTAÇÃO ---
             with st.sidebar:
-                st.download_button("📥 Baixar como TXT", texto_final, file_name="ninja_brain.txt")
-                # Gerando um .doc simples via texto
-                st.download_button("📄 Exportar para Word", texto_final, file_name="ninja_brain.doc")
-                st.info("Para imprimir: Pressione Ctrl + P")
+                st.download_button("📥 Baixar em TXT", resposta_texto, file_name="mentoria_ninja.txt")
+                st.download_button("📄 Salvar para Word", resposta_texto, file_name="mentoria_ninja.doc")
                 
         except Exception as e:
-            st.error(f"Ocorreu um erro técnico. Verifique se sua chave API é nova e exclusiva.")
-            st.info("Dica: Se o erro 404 persistir, dê um 'Reboot app' nas configurações do Streamlit.")
+            st.error(f"Erro ao conectar com o cérebro da IA: {e}")
+            st.info("Dica: Se o erro persistir, gere uma nova chave no Google AI Studio e dê REBOOT no app.")
