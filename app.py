@@ -1,55 +1,53 @@
 import streamlit as st
 import google.generativeai as genai
+from io import BytesIO
 
-# 1. Configuração Visual
-st.set_page_config(page_title="NinjaBrain: Seu Mentor 360º", layout="centered")
-st.title("🥷 NinjaBrain: Seu Mentor 360º")
-st.caption("Especialista em Vida, IA, Finanças e Concursos")
+# Configuração da página
+st.set_page_config(page_title="NinjaBrain Multimodal", layout="wide")
+st.title("🥷 NinjaBrain: Segundo Cérebro Pro")
 
-# 2. Conexão com a Chave Secreta
-# O Streamlit busca a chave que você salvou no menu 'Secrets'
+# Conexão segura
 api_key = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=api_key)
+model = genai.GenerativeModel("gemini-1.5-flash")
 
-# 3. A NOVA PERSONALIDADE (Onde o Ninja evolui)
-system_prompt = (
-    "Você é o NinjaBrain, o Mentor Pessoal do Kadson. "
-    "Sua missão é ajudá-lo em TODAS as áreas da vida: "
-    "1. IA e Tecnologia: Ensine-o a dominar ferramentas e automatizar tarefas. "
-    "2. Carreira e Riqueza: Dê conselhos estratégicos e planos de ação. "
-    "3. Concursos (CNU): Continue sendo o mestre nos estudos. "
-    "4. Estilo de Vida: Ajude na organização e produtividade diária. "
-    "Responda sempre de forma direta, motivadora e organizada."
-)
+# --- BARRA LATERAL (Uploads e Exportação) ---
+with st.sidebar:
+    st.header("📁 Central de Arquivos")
+    uploaded_file = st.file_uploader("Subir Áudio, Imagem ou PDF", type=['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'wav'])
+    
+    if uploaded_file:
+        st.success(f"Arquivo {uploaded_file.name} carregado!")
 
-# 4. Inicialização do Modelo
-model = genai.GenerativeModel(
-    model_name="gemini-1.5-flash",
-    system_instruction=system_prompt
-)
-
-# 5. Memória da Conversa
+# --- ÁREA DE CHAT ---
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Exibe as mensagens anteriores
 for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 6. O TRECHO PRINCIPAL (Interação)
-if prompt := st.chat_input("Em que vamos evoluir hoje, Kadson?"):
-    # Adiciona a pergunta do usuário no histórico
+if prompt := st.chat_input("Ninja, analise este arquivo para mim..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
-    # Gera a resposta do Mentor
     with st.chat_message("assistant"):
-        # Cria o chat com o histórico atual
-        chat = model.start_chat(history=[])
-        response = chat.send_message(prompt)
+        # Lógica para processar arquivos + texto
+        if uploaded_file:
+            content = [prompt, uploaded_file]
+            response = model.generate_content(content)
+        else:
+            response = model.generate_content(prompt)
         
-        st.markdown(response.text)
-        # Salva a resposta do Ninja no histórico
-        st.session_state.messages.append({"role": "assistant", "content": response.text})
+        full_response = response.text
+        st.markdown(full_response)
+        st.session_state.messages.append({"role": "assistant", "content": full_response})
+
+        # --- BOTÕES DE EXPORTAÇÃO ---
+        col1, col2 = st.columns(2)
+        with col1:
+            st.download_button("📥 Baixar TXT", full_response, file_name="resposta_ninja.txt")
+        with col2:
+            # Simulação simples de Word via texto puro
+            st.download_button("📄 Exportar Word (Doc)", full_response, file_name="resposta_ninja.doc")
