@@ -1,35 +1,39 @@
 import streamlit as st
 import google.generativeai as genai
 
-# 1. Configuração e Estilo
-st.set_page_config(page_title="NinjaBrain Pro", layout="wide")
+# 1. Configuração de Alta Performance
+st.set_page_config(page_title="NinjaBrain OS", layout="wide", initial_sidebar_state="expanded")
 
-# Conexão com a chave nos Secrets
+# Conexão com a API
 api_key = st.secrets["GEMINI_API_KEY"]
 genai.configure(api_key=api_key)
-model = genai.GenerativeModel("gemini-1.5-flash")
 
-# 2. BARRA LATERAL (Abas de Funções)
+# 2. PERSONALIDADE DUPLA (Mentor + PRD Architect)
+system_prompt = (
+    "Você é o NinjaBrain OS, uma inteligência híbrida de alto nível. "
+    "Sua missão é atuar em dois modos dependendo da necessidade do Kadson: "
+    "MODO MENTOR: Ajuda em vida, finanças, estudos (CNU) e produtividade. "
+    "MODO PRD ARCHITECT: Atua como um engenheiro de software sênior. Transforma ideias em "
+    "Documentos de Requisitos (PRD) técnicos. Quando solicitado um app, você deve entregar: "
+    "1. Objetivo; 2. Funcionalidades; 3. Tech Stack; 4. O Código pronto para o Cursor Free."
+)
+
+model = genai.GenerativeModel(
+    model_name="gemini-1.5-flash",
+    system_instruction=system_prompt
+)
+
+# 3. INTERFACE COM ABAS E SIDEBAR
 with st.sidebar:
-    st.title("🧰 Ferramentas Ninja")
-    
-    tab_upload, tab_export = st.tabs(["📁 Upload", "📤 Exportar"])
-    
-    with tab_upload:
-        st.subheader("Analisar Arquivo")
-        arquivo = st.file_uploader(
-            "Subir Áudio, Imagem ou PDF", 
-            type=['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'wav']
-        )
-        if arquivo:
-            st.info(f"Arquivo '{arquivo.name}' pronto para análise.")
+    st.title("🥷 Ferramentas")
+    modo = st.radio("Escolha o Foco:", ["🧠 Mentor de Vida", "🛠️ Arquiteto de PRD (Apps)"])
+    st.divider()
+    upload = st.file_uploader("Subir arquivo (PDF, Imagem, Áudio)", type=['pdf', 'png', 'jpg', 'mp3', 'wav'])
+    if upload:
+        st.success("Arquivo pronto!")
 
-    with tab_export:
-        st.subheader("Salvar Conversa")
-        # Aqui ficarão os botões de download após gerar a resposta
-
-# 3. INTERFACE DE CHAT
-st.title("🥷 NinjaBrain: Segundo Cérebro")
+# 4. ÁREA DE CHAT
+st.title(f"🚀 NinjaBrain: {modo}")
 
 if "messages" not in st.session_state:
     st.session_state.messages = []
@@ -38,24 +42,25 @@ for message in st.session_state.messages:
     with st.chat_message(message["role"]):
         st.markdown(message["content"])
 
-# 4. LÓGICA DE PROCESSAMENTO
-if prompt := st.chat_input("O que vamos evoluir hoje, Kadson?"):
+if prompt := st.chat_input("O que vamos construir ou resolver hoje?"):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
-        # Se tiver arquivo, o Ninja lê o arquivo + o texto
-        if arquivo:
-            res = model.generate_content([prompt, arquivo])
-        else:
-            res = model.generate_content(prompt)
+        # Contexto extra se estiver no modo PRD
+        if modo == "🛠️ Arquiteto de PRD (Apps)":
+            prompt = f"Gere um PRD completo e o código inicial para esta ideia: {prompt}"
         
-        texto_resposta = res.text
-        st.markdown(texto_resposta)
-        st.session_state.messages.append({"role": "assistant", "content": texto_resposta})
-
-        # Adiciona botões de exportação dinâmicos na aba de exportar
-        with tab_export:
-            st.download_button("📥 Baixar TXT", texto_resposta, file_name="ninja_brain.txt")
-            st.download_button("📄 Baixar Word (Doc)", texto_resposta, file_name="ninja_brain.doc")
+        # Processamento multimodal
+        if upload:
+            response = model.generate_content([prompt, upload])
+        else:
+            response = model.generate_content(prompt)
+            
+        st.markdown(response.text)
+        st.session_state.messages.append({"role": "assistant", "content": response.text})
+        
+        # Botões de Exportação na barra lateral após a resposta
+        with st.sidebar:
+            st.download_button("📥 Baixar Resposta (TXT)", response.text, file_name="ninja_output.txt")
