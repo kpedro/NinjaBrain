@@ -1,85 +1,64 @@
 import streamlit as st
 import google.generativeai as genai
+import os
 
-# 1. CONFIGURAÇÃO DE LAYOUT
-st.set_page_config(
-    page_title="NinjaBrain OS", 
-    layout="wide", 
-    initial_sidebar_state="expanded"
-)
+# 1. Configuração de Layout
+st.set_page_config(page_title="NinjaBrain OS", layout="wide", initial_sidebar_state="expanded")
 
-# 2. CONEXÃO COM A API (Secrets)
+# 2. Conexão Estritamente Estável (v1)
 if "GEMINI_API_KEY" not in st.secrets:
-    st.error("❌ ERRO: Adicione a GEMINI_API_KEY nos Secrets do Streamlit Cloud.")
+    st.error("Configure a GEMINI_API_KEY nos Secrets.")
     st.stop()
 
-# Configuração com transporte REST para evitar erro 404 v1beta
+# FORÇANDO A API V1 (ESTÁVEL) - Isso mata o erro v1beta
+os.environ["GOOGLE_API_VERSION"] = "v1" 
 genai.configure(api_key=st.secrets["GEMINI_API_KEY"], transport='rest')
 
-# 3. INICIALIZAÇÃO DO MODELO
-model = genai.GenerativeModel('gemini-1.5-flash')
+# 3. Inicialização do Modelo
+# Usando o nome técnico completo que evita o erro 404
+model = genai.GenerativeModel('models/gemini-1.5-flash')
 
-# 4. BARRA LATERAL (Ferramentas e Exportação)
+# 4. Barra Lateral
 with st.sidebar:
-    st.title("🥷 Ferramentas Ninja")
+    st.title("🧰 Ferramentas Ninja")
     st.success("🎯 Modo: Mentor de Vida")
-    
     st.divider()
-    st.subheader("📁 Central de Arquivos")
-    arquivo = st.file_uploader("Analisar PDF, Imagem ou Áudio", type=['pdf', 'png', 'jpg', 'jpeg', 'mp3', 'wav'])
-    
+    arquivo = st.file_uploader("Analisar Arquivo", type=['pdf', 'png', 'jpg'])
     st.divider()
-    st.subheader("📥 Exportar Mentoria")
+    st.subheader("📥 Exportar")
 
-# 5. INTERFACE DE CHAT
+# 5. Interface de Chat
 st.title("🚀 NinjaBrain OS")
 
-# Inicializa o histórico
 if "messages" not in st.session_state:
     st.session_state.messages = []
 
-# Exibe as mensagens
 for m in st.session_state.messages:
     with st.chat_message(m["role"]):
         st.markdown(m["content"])
 
-# 6. LÓGICA DE PROCESSAMENTO (Indentação corrigida)
-if prompt := st.chat_input("Como posso te ajudar hoje, Kadson?"):
+if prompt := st.chat_input("Diga algo para testar..."):
     st.session_state.messages.append({"role": "user", "content": prompt})
     with st.chat_message("user"):
         st.markdown(prompt)
 
     with st.chat_message("assistant"):
         try:
-            # Contexto de personalidade
-            contexto = "Você é o NinjaBrain, mentor de vida focado em produtividade. "
-            full_prompt = f"{contexto} Pergunta do Kadson: {prompt}"
-            
-            # Chamada Multimodal ou Simples com indentação correta
+            # Chamada direta
             if arquivo:
-                res = model.generate_content([full_prompt, arquivo])
+                res = model.generate_content([prompt, arquivo])
             else:
-                res = model.generate_content(full_prompt)
+                res = model.generate_content(prompt)
             
-            texto_resposta = res.text
-            st.markdown(texto_resposta)
-            st.session_state.messages.append({"role": "assistant", "content": texto_resposta})
+            resposta = res.text
+            st.markdown(resposta)
+            st.session_state.messages.append({"role": "assistant", "content": resposta})
             
-            # BOTÕES DE EXPORTAÇÃO NA SIDEBAR
+            # ATIVA OS BOTÕES DE EXPORTAR NA SIDEBAR
             with st.sidebar:
-                st.download_button(
-                    label="📥 Baixar em TXT",
-                    data=texto_resposta,
-                    file_name="mentoria_ninja.txt",
-                    mime="text/plain"
-                )
-                st.download_button(
-                    label="📄 Salvar para Word",
-                    data=texto_resposta,
-                    file_name="mentoria_ninja.doc",
-                    mime="application/vnd.ms-word"
-                )
-                st.info("Para imprimir: Pressione Ctrl + P")
-
+                st.download_button("📥 Baixar TXT", resposta, file_name="ninja.txt")
+                st.download_button("📄 Salvar Word", resposta, file_name="ninja.doc")
+                
         except Exception as e:
-            st.error(f"Erro na conexão: {e}")
+            st.error(f"Erro Crítico: {e}")
+            st.info("Se o erro 404 persistir, troque o nome do modelo para 'models/gemini-pro'.")
