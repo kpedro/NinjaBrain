@@ -294,8 +294,7 @@ let chatInicializado = false;
 // URL da API - ajustar conforme ambiente
 // Para produção: usar URL do Vercel/Netlify após deploy
 // Para desenvolvimento local: usar 'http://localhost:3000/api/chat' (com vercel dev)
-// IMPORTANTE: Atualize esta URL após fazer deploy no Vercel!
-const API_CHAT_URL = 'https://SEU-PROJETO.vercel.app/api/chat'; // ⚠️ ATUALIZAR APÓS DEPLOY
+const API_CHAT_URL = 'https://ninja-brain.vercel.app/api/chat';
 
 function inicializarChat() {
     if (chatInicializado) return;
