@@ -1,0 +1,201 @@
+# 🗺️ Roadmap de Expansão - NinjaBrain Educacional
+
+## 📅 Timeline Sugerida
+
+### **Q1 2025: Validação e Fundação**
+
+#### **Mês 1-2: Pesquisa e Validação**
+- [ ] Pesquisa com estudantes de diferentes níveis
+- [ ] Análise de concorrentes
+- [ ] Definição de MVP expandido
+- [ ] Protótipos de novas funcionalidades
+
+#### **Mês 3: Desenvolvimento MVP**
+- [ ] Sistema de perfis básico
+- [ ] Biblioteca de técnicas de estudo (10 técnicas)
+- [ ] Planos para 3 níveis (Fundamental, Médio, Superior)
+- [ ] Interface melhorada
+
+---
+
+### **Q2 2025: Expansão de Conteúdo**
+
+#### **Mês 4-5: Conteúdo Educacional**
+- [ ] 20+ técnicas de estudo documentadas
+- [ ] Planos para todos os níveis
+- [ ] Guias de preparação profissional
+- [ ] Biblioteca de recursos
+
+#### **Mês 6: Funcionalidades Interativas**
+- [ ] Sistema de progresso básico
+- [ ] Gamificação inicial (streaks, badges)
+- [ ] Dashboard personalizado
+- [ ] Análise de tempo de estudo
+
+---
+
+### **Q3 2025: Preparação Profissional**
+
+#### **Mês 7-8: Módulos de Carreira**
+- [ ] Soft Skills (comunicação, liderança, etc.)
+- [ ] Hard Skills por área
+- [ ] Guias de LinkedIn e portfólio
+- [ ] Preparação para entrevistas
+
+#### **Mês 9: IA e Personalização**
+- [ ] Recomendações inteligentes
+- [ ] Ajuste automático de planos
+- [ ] Análise de padrões de estudo
+- [ ] Sugestões de otimização
+
+---
+
+### **Q4 2025: Comunidade e Escala**
+
+#### **Mês 10-11: Comunidade**
+- [ ] Fóruns por área
+- [ ] Compartilhamento de planos
+- [ ] Grupos de estudo
+- [ ] Sistema de mentoria
+
+#### **Mês 12: Polimento e Lançamento**
+- [ ] Testes beta
+- [ ] Correções e melhorias
+- [ ] Marketing e divulgação
+- [ ] Lançamento oficial
+
+---
+
+## 🎯 Prioridades Imediatas (Próximas 4 Semanas)
+
+### **Semana 1: Planejamento**
+- [ ] Definir escopo do MVP expandido
+- [ ] Criar wireframes das novas telas
+- [ ] Listar todas as técnicas de estudo a incluir
+- [ ] Definir estrutura de dados
+
+### **Semana 2: Desenvolvimento - Perfis**
+- [ ] Criar sistema de seleção de perfil
+- [ ] Adaptar conteúdo por perfil
+- [ ] Interface de escolha de objetivo
+- [ ] Testes básicos
+
+### **Semana 3: Desenvolvimento - Técnicas**
+- [ ] Página de biblioteca de técnicas
+- [ ] Cards explicativos de cada técnica
+- [ ] Integração com planos de estudo
+- [ ] Exemplos práticos
+
+### **Semana 4: Desenvolvimento - Planos Expandidos**
+- [ ] Gerador de planos por objetivo
+- [ ] Planos para diferentes níveis
+- [ ] Interface de personalização
+- [ ] Testes e ajustes
+
+---
+
+## 📋 Checklist de Funcionalidades
+
+### **Essenciais (MVP)**
+- [x] Web app básico funcionando
+- [ ] Sistema de perfis (Fundamental, Médio, Superior, Concurso)
+- [ ] Biblioteca de técnicas (mínimo 10)
+- [ ] Planos para diferentes objetivos
+- [ ] Dashboard básico
+
+### **Importantes (V1)**
+- [ ] Sistema de progresso
+- [ ] Gamificação básica
+- [ ] Módulos de preparação profissional
+- [ ] Análise de tempo de estudo
+- [ ] Recomendações inteligentes
+
+### **Desejáveis (V2)**
+- [ ] Comunidade e fóruns
+- [ ] Compartilhamento de planos
+- [ ] App mobile
+- [ ] Integração com calendários
+- [ ] Modo offline
+
+---
+
+## 🛠️ Tecnologias Sugeridas
+
+### **Frontend (Atual)**
+- ✅ HTML/CSS/JavaScript (manter)
+- 🔄 Considerar: React/Vue para escalabilidade
+
+### **Backend (Novo)**
+- 🔄 Node.js + Express ou Python + FastAPI
+- 🔄 Banco de dados: PostgreSQL ou MongoDB
+- 🔄 Autenticação: Supabase Auth ou Firebase
+
+### **IA/ML (Futuro)**
+- 🔄 Recomendações: TensorFlow.js ou OpenAI API
+- 🔄 Análise de padrões: Python + scikit-learn
+
+### **Infraestrutura**
+- ✅ GitHub Pages (atual)
+- 🔄 Considerar: Vercel, Netlify para backend
+- 🔄 CDN para assets
+
+---
+
+## 💰 Estimativa de Recursos
+
+### **Desenvolvimento**
+- **Solo:** 6-12 meses (tempo parcial)
+- **Equipe pequena (2-3 devs):** 3-6 meses
+- **Equipe completa (5+ devs):** 2-3 meses
+
+### **Conteúdo**
+- **Pesquisa e escrita:** 2-3 meses
+- **Design e UX:** 1-2 meses
+- **Revisão e testes:** 1 mês
+
+### **Infraestrutura**
+- **Inicial:** Gratuito (GitHub Pages, Supabase free tier)
+- **Escala:** $20-100/mês (conforme crescimento)
+
+---
+
+## 🎯 Métricas de Sucesso
+
+### **Engajamento**
+- Usuários ativos mensais
+- Tempo médio na plataforma
+- Tarefas completadas
+- Retenção (usuários que voltam)
+
+### **Eficácia**
+- Objetivos alcançados
+- Melhoria nas notas/resultados
+- Satisfação do usuário
+- Recomendações (NPS)
+
+### **Crescimento**
+- Novos usuários por mês
+- Taxa de conversão (free → premium)
+- Compartilhamentos
+- Menções e reviews
+
+---
+
+## 🚦 Riscos e Mitigações
+
+### **Risco: Complexidade Excessiva**
+**Mitigação:** Focar em MVP simples, adicionar features gradualmente
+
+### **Risco: Concorrência**
+**Mitigação:** Diferenciação clara (ciência + preparação profissional)
+
+### **Risco: Abandono de Usuários**
+**Mitigação:** Gamificação, comunidade, valor contínuo
+
+### **Risco: Escalabilidade Técnica**
+**Mitigação:** Arquitetura preparada desde o início
+
+---
+
+**Este roadmap é flexível e deve ser ajustado conforme feedback dos usuários! 🗺️**
+
