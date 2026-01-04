@@ -296,25 +296,34 @@ Perfis:
 
 ## 🚀 Próximos Passos Imediatos
 
+### **Fase 1: Validação (2-4 semanas)**
 1. **Validar a ideia:**
    - Pesquisar necessidades dos estudantes
    - Entender dores principais
-   - Validar com usuários
+   - Validar com usuários (entrevistas, surveys)
+   - Analisar concorrentes
 
-2. **Expandir conteúdo:**
-   - Adicionar técnicas de estudo
-   - Criar planos para diferentes níveis
-   - Desenvolver módulos de carreira
+2. **Definir MVP expandido:**
+   - Escopo mínimo viável
+   - Priorizar funcionalidades
+   - Criar protótipos
 
-3. **Melhorar UX:**
+### **Fase 2: Desenvolvimento Inicial (4-8 semanas)**
+3. **Expandir conteúdo:**
+   - Adicionar 10 técnicas de estudo fundamentais
+   - Criar planos para 3 níveis (Fundamental, Médio, Superior)
+   - Desenvolver estrutura de módulos de carreira
+
+4. **Melhorar UX:**
    - Interface mais intuitiva
    - Onboarding para novos usuários
    - Personalização de experiência
+   - Sistema de seleção de perfil
 
-4. **Adicionar funcionalidades:**
-   - Sistema de progresso
-   - Gamificação básica
-   - Recomendações
+5. **Adicionar funcionalidades básicas:**
+   - Sistema de progresso simples
+   - Gamificação básica (streaks)
+   - Dashboard personalizado
 
 ---
 

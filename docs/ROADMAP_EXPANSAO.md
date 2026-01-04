@@ -68,29 +68,42 @@
 
 ## 🎯 Prioridades Imediatas (Próximas 4 Semanas)
 
-### **Semana 1: Planejamento**
+### **Semana 1: Planejamento e Validação**
+- [ ] Pesquisa com estudantes (survey/entrevistas)
+- [ ] Análise de concorrentes (Duolingo, Khan Academy, etc.)
 - [ ] Definir escopo do MVP expandido
 - [ ] Criar wireframes das novas telas
-- [ ] Listar todas as técnicas de estudo a incluir
-- [ ] Definir estrutura de dados
+- [ ] Listar todas as técnicas de estudo a incluir (mínimo 10)
+- [ ] Definir estrutura de dados e arquitetura
 
-### **Semana 2: Desenvolvimento - Perfis**
-- [ ] Criar sistema de seleção de perfil
+**Entregável:** Documento de validação e wireframes
+
+### **Semana 2: Desenvolvimento - Perfis e Estrutura**
+- [ ] Criar sistema de seleção de perfil (tela inicial)
 - [ ] Adaptar conteúdo por perfil
 - [ ] Interface de escolha de objetivo
-- [ ] Testes básicos
+- [ ] Estrutura de navegação expandida
+- [ ] Testes básicos de usabilidade
 
-### **Semana 3: Desenvolvimento - Técnicas**
+**Entregável:** Sistema de perfis funcional
+
+### **Semana 3: Desenvolvimento - Biblioteca de Técnicas**
 - [ ] Página de biblioteca de técnicas
-- [ ] Cards explicativos de cada técnica
+- [ ] Cards explicativos de cada técnica (mínimo 10)
+- [ ] Exemplos práticos de aplicação
 - [ ] Integração com planos de estudo
-- [ ] Exemplos práticos
+- [ ] Busca e filtros de técnicas
+
+**Entregável:** Biblioteca de técnicas funcional
 
 ### **Semana 4: Desenvolvimento - Planos Expandidos**
 - [ ] Gerador de planos por objetivo
-- [ ] Planos para diferentes níveis
-- [ ] Interface de personalização
-- [ ] Testes e ajustes
+- [ ] Planos para diferentes níveis educacionais
+- [ ] Interface de personalização de planos
+- [ ] Integração com técnicas de estudo
+- [ ] Testes completos e ajustes
+
+**Entregável:** Sistema de planos expandido funcional
 
 ---
 
@@ -144,18 +157,30 @@
 ## 💰 Estimativa de Recursos
 
 ### **Desenvolvimento**
-- **Solo:** 6-12 meses (tempo parcial)
+- **Solo (tempo parcial):** 6-12 meses
+- **Solo (tempo integral):** 3-6 meses
 - **Equipe pequena (2-3 devs):** 3-6 meses
 - **Equipe completa (5+ devs):** 2-3 meses
 
 ### **Conteúdo**
-- **Pesquisa e escrita:** 2-3 meses
+- **Pesquisa e validação:** 1-2 meses
+- **Escrita de técnicas e guias:** 2-3 meses
 - **Design e UX:** 1-2 meses
 - **Revisão e testes:** 1 mês
 
 ### **Infraestrutura**
-- **Inicial:** Gratuito (GitHub Pages, Supabase free tier)
-- **Escala:** $20-100/mês (conforme crescimento)
+- **Inicial (MVP):** Gratuito
+  - GitHub Pages (hosting)
+  - Supabase free tier (backend)
+  - Total: $0/mês
+  
+- **Crescimento (100-1000 usuários):** $20-50/mês
+  - Vercel/Netlify (se necessário)
+  - Supabase Pro (se necessário)
+  
+- **Escala (1000+ usuários):** $50-200/mês
+  - Infraestrutura escalável
+  - CDN e otimizações
 
 ---
 
