@@ -3,21 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>🥷 NinjaBrain - CNU 2026 | Bloco 8</title>
+    <title>🥷 NinjaBrain - Assistente Educacional Inteligente</title>
     <link rel="stylesheet" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/marked@9.1.2/marked.min.js"></script>
 </head>
 <body>
-    <div class="container">
+    <!-- Tela de Seleção de Perfil (Onboarding) -->
+    <div id="onboarding" class="onboarding-screen" style="display: none;">
+        <div class="onboarding-content">
+            <h1>🥷 Bem-vindo ao NinjaBrain!</h1>
+            <p class="onboarding-subtitle">Escolha seu perfil para personalizar sua experiência</p>
+            
+            <div class="perfis-grid" id="perfis-container">
+                <!-- Perfis serão inseridos aqui via JavaScript -->
+            </div>
+            
+            <button id="pular-onboarding" class="btn-secondary">Pular e usar modo padrão</button>
+        </div>
+    </div>
+
+    <!-- Conteúdo Principal -->
+    <div class="container" id="main-container">
         <header class="header">
-            <h1>🥷 NinjaBrain</h1>
-            <p class="subtitle">Segundo Cérebro de IA | CNU 2026 - Bloco 8</p>
+            <div class="header-top">
+                <h1>🥷 NinjaBrain</h1>
+                <button id="trocar-perfil" class="btn-perfil" style="display: none;" title="Trocar perfil">
+                    <span id="perfil-icone">📚</span>
+                    <span id="perfil-nome">Perfil</span>
+                </button>
+            </div>
+            <p class="subtitle" id="subtitle">Assistente Educacional Inteligente</p>
         </header>
 
         <nav class="tabs">
             <button class="tab active" data-tab="plano">📋 Plano de Ataque</button>
             <button class="tab" data-tab="disciplinas">📚 Disciplinas</button>
             <button class="tab" data-tab="cronograma">📅 Cronograma</button>
+            <button class="tab" data-tab="tecnicas">📖 Técnicas de Estudo</button>
         </nav>
 
         <main class="content">
@@ -130,6 +152,35 @@
                     </div>
                 </div>
             </div>
+
+            <!-- Nova Aba: Técnicas de Estudo -->
+            <div id="tecnicas" class="tab-content">
+                <div class="tecnicas-header">
+                    <h2>📖 Biblioteca de Técnicas de Estudo</h2>
+                    <p class="tecnicas-subtitle">Métodos comprovados cientificamente para maximizar seu aprendizado</p>
+                    
+                    <div class="filtros-tecnicas">
+                        <button class="filtro-btn active" data-filtro="todas">Todas</button>
+                        <button class="filtro-btn" data-filtro="fundamental">Fundamental</button>
+                        <button class="filtro-btn" data-filtro="intermediario">Intermediário</button>
+                        <button class="filtro-btn" data-filtro="avancado">Avançado</button>
+                    </div>
+                </div>
+
+                <div class="tecnicas-grid" id="tecnicas-container">
+                    <!-- Técnicas serão inseridas aqui via JavaScript -->
+                </div>
+
+                <!-- Modal de Detalhes da Técnica -->
+                <div id="tecnica-modal" class="modal" style="display: none;">
+                    <div class="modal-content">
+                        <span class="modal-close">&times;</span>
+                        <div id="tecnica-detalhes">
+                            <!-- Detalhes serão inseridos aqui -->
+                        </div>
+                    </div>
+                </div>
+            </div>
         </main>
 
         <footer class="footer">
@@ -137,6 +188,8 @@
         </footer>
     </div>
 
+    <script src="perfis.js"></script>
+    <script src="tecnicas.js"></script>
     <script src="app.js"></script>
 </body>
 </html>
