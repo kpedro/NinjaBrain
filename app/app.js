@@ -284,3 +284,149 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     }
 });
+
+// ============================================
+// CHAT ASSISTENTE COM IA
+// ============================================
+
+let chatInicializado = false;
+
+// URL da API - ajustar conforme ambiente
+// Para produção: usar URL do Vercel/Netlify após deploy
+// Para desenvolvimento local: usar 'http://localhost:3000/api/chat' (com vercel dev)
+// IMPORTANTE: Atualize esta URL após fazer deploy no Vercel!
+const API_CHAT_URL = 'https://SEU-PROJETO.vercel.app/api/chat'; // ⚠️ ATUALIZAR APÓS DEPLOY
+
+function inicializarChat() {
+    if (chatInicializado) return;
+    chatInicializado = true;
+
+    const abrirChatBtn = document.getElementById('abrir-chat');
+    const fecharChatBtn = document.getElementById('fechar-chat');
+    const enviarChatBtn = document.getElementById('enviar-chat');
+    const chatInput = document.getElementById('chat-input');
+    const chatContainer = document.getElementById('chat-container');
+
+    if (!abrirChatBtn || !fecharChatBtn || !enviarChatBtn || !chatInput || !chatContainer) {
+        console.warn('Elementos do chat não encontrados');
+        return;
+    }
+
+    // Abrir chat
+    abrirChatBtn.addEventListener('click', () => {
+        chatContainer.style.display = 'flex';
+        chatInput.focus();
+    });
+
+    // Fechar chat
+    fecharChatBtn.addEventListener('click', () => {
+        chatContainer.style.display = 'none';
+    });
+
+    // Enviar mensagem (botão)
+    enviarChatBtn.addEventListener('click', enviarMensagem);
+
+    // Enviar mensagem (Enter)
+    chatInput.addEventListener('keypress', (e) => {
+        if (e.key === 'Enter' && !e.shiftKey) {
+            e.preventDefault();
+            enviarMensagem();
+        }
+    });
+}
+
+async function enviarMensagem() {
+    const input = document.getElementById('chat-input');
+    const enviarBtn = document.getElementById('enviar-chat');
+    const mensagem = input.value.trim();
+    
+    if (!mensagem) return;
+
+    // Adiciona mensagem do usuário
+    adicionarMensagemChat('user', mensagem);
+    input.value = '';
+    
+    // Desabilita input e botão
+    input.disabled = true;
+    enviarBtn.disabled = true;
+
+    // Mostra loading
+    const loadingId = adicionarMensagemChat('assistant', 'Pensando... 🧠', true);
+
+    try {
+        const perfil = localStorage.getItem('ninjaBrainPerfil') || 'concurso';
+        
+        // Chama API
+        const response = await fetch(API_CHAT_URL, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                message: mensagem,
+                perfil: perfil
+            })
+        });
+
+        if (!response.ok) {
+            const errorData = await response.json().catch(() => ({}));
+            throw new Error(errorData.error || `Erro HTTP: ${response.status}`);
+        }
+
+        const data = await response.json();
+        
+        // Remove loading e adiciona resposta
+        const loadingMsg = document.getElementById(loadingId);
+        if (loadingMsg) {
+            loadingMsg.textContent = data.resposta || 'Desculpe, não consegui gerar uma resposta.';
+            loadingMsg.classList.remove('loading');
+        } else {
+            // Fallback se elemento não existir
+            adicionarMensagemChat('assistant', data.resposta || 'Erro ao processar resposta.');
+        }
+
+    } catch (error) {
+        console.error('Erro ao chamar API:', error);
+        
+        // Remove loading e mostra erro
+        const loadingMsg = document.getElementById(loadingId);
+        if (loadingMsg) {
+            loadingMsg.textContent = 'Desculpe, ocorreu um erro. Verifique sua conexão e tente novamente.';
+            loadingMsg.classList.remove('loading');
+        } else {
+            adicionarMensagemChat('assistant', 'Erro ao conectar com o assistente. Tente novamente mais tarde.');
+        }
+    } finally {
+        // Reabilita input e botão
+        input.disabled = false;
+        enviarBtn.disabled = false;
+        input.focus();
+    }
+}
+
+function adicionarMensagemChat(tipo, texto, isLoading = false) {
+    const messagesDiv = document.getElementById('chat-messages');
+    if (!messagesDiv) return null;
+
+    const messageDiv = document.createElement('div');
+    messageDiv.className = `chat-message ${tipo}${isLoading ? ' loading' : ''}`;
+    messageDiv.textContent = texto;
+    messageDiv.id = `msg-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`;
+    
+    messagesDiv.appendChild(messageDiv);
+    
+    // Scroll para baixo
+    messagesDiv.scrollTop = messagesDiv.scrollHeight;
+    
+    return messageDiv.id;
+}
+
+// Inicializar chat quando DOM estiver pronto
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+        // Aguardar um pouco para garantir que outros scripts carregaram
+        setTimeout(inicializarChat, 100);
+    });
+} else {
+    setTimeout(inicializarChat, 100);
+}

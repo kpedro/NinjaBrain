@@ -188,6 +188,24 @@
         </footer>
     </div>
 
+    <!-- Chat Assistente com IA -->
+    <div id="chat-container" class="chat-container" style="display: none;">
+        <div class="chat-header">
+            <h3>🥷 Assistente NinjaBrain</h3>
+            <button id="fechar-chat" class="chat-close" title="Fechar chat">×</button>
+        </div>
+        <div id="chat-messages" class="chat-messages">
+            <div class="chat-message assistant">
+                Olá! Sou o NinjaBrain, seu assistente educacional. Como posso ajudar você hoje?
+            </div>
+        </div>
+        <div class="chat-input-container">
+            <input type="text" id="chat-input" placeholder="Pergunte sobre seus estudos..." />
+            <button id="enviar-chat" class="chat-send">Enviar</button>
+        </div>
+    </div>
+    <button id="abrir-chat" class="chat-toggle" title="Abrir assistente">💬</button>
+
     <script src="perfis.js"></script>
     <script src="tecnicas.js"></script>
     <script src="app.js"></script>

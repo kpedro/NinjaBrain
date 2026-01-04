@@ -1,0 +1,22 @@
+{
+  "name": "ninjabrain",
+  "version": "2.0.0",
+  "description": "Assistente Educacional Inteligente",
+  "main": "app/index.html",
+  "scripts": {
+    "dev": "cd app && python -m http.server 8000",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "dependencies": {
+    "@google/generative-ai": "^0.2.1"
+  },
+  "keywords": [
+    "education",
+    "study",
+    "ai",
+    "assistant"
+  ],
+  "author": "",
+  "license": "MIT"
+}
+
