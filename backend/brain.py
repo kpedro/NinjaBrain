@@ -2,8 +2,20 @@ import os
 import google.generativeai as genai
 from dotenv import load_dotenv
 
-# 1. Configuração de ambiente
-load_dotenv()
+# 1. Localiza o arquivo .env na pasta raiz
+base_dir = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+dotenv_path = os.path.join(base_dir, '.env')
+
+# 2. Carrega as variáveis
+load_dotenv(dotenv_path)
+
+# Remove BOM de todas as variáveis de ambiente (corrige problema de encoding UTF-8 com BOM)
+for key in list(os.environ.keys()):
+    if key.startswith('\ufeff'):
+        new_key = key.replace('\ufeff', '')
+        os.environ[new_key] = os.environ[key]
+        del os.environ[key]
+
 chave = os.getenv("GEMINI_API_KEY")
 
 if not chave:
@@ -11,8 +23,14 @@ if not chave:
 else:
     genai.configure(api_key=chave)
     
-    # 2. Escolhemos o modelo de elite que apareceu na sua lista
-    model = genai.GenerativeModel('models/gemini-2.5-flash')
+    # 2. Usa modelo disponível (tenta 2.0-flash primeiro, fallback para pro)
+    try:
+        model = genai.GenerativeModel('models/gemini-2.0-flash')
+    except:
+        try:
+            model = genai.GenerativeModel('models/gemini-pro')
+        except:
+            model = genai.GenerativeModel('gemini-pro')
     
     # 3. Personalidade do Agente
     contexto = """
